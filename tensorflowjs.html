@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/4.18.0-rc.0/tf.min.js" integrity="sha512-54oIBcZnKi8FagIpn4qtWzmQTHwuosUdBAKRkuNt9SyWLnjOFKz1JvMYyJOwzoNUdp0SHTXWzIYd+AobbPD3Rg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TENSORFLOW FIRST CONTACT</title>
+    
+</head>
+<body>
+    <h1>TENSORFLOW ENTRENAMIENTO DE FUNCION 2*x+6</h1>
+    <input id="input" type="number" value="0" >
+    <p id="result"> 
+
+    </p>
+    <button onclick="learnLinear(input.value)">ENTRENAR</button>
+    <button id="predict">MOSTRAR PREDICCION</button>
+    
+    <script>    
+        const result = document.querySelector("#result");
+        const predecir = document.querySelector("#predict");
+        async function learnLinear(input) {
+            const model = tf.sequential();
+            model.add(tf.layers.dense({units: 1, inputShape: [1]}));
+
+            model.compile({loss: 'meanSquaredError', optimizer: 'sgd'});
+            const xs = tf.tensor2d([-6, -5, -4, -3, -2, -1,  0,  1,  2], [9, 1]);
+            const ys = tf.tensor2d([-6,-4, -2,  0,  2,  4,  6,  8, 10 ], [9, 1]);
+
+            await model.fit(xs, ys, {epochs: 250});
+
+            const output = model.predict(tf.tensor2d([parseFloat(input)], [1, 1]));
+
+            predecir.addEventListener("click", () => {
+                result.innerText = output.dataSync()[0];
+            })
+                    }
+        
+        
+    </script>
+</body>
+</html>
